@@ -1,0 +1,25 @@
+name: Праздник дня в Telegram
+
+on:
+  schedule:
+    # 06:00 по Москве (МСК = UTC+3) -> 03:00 UTC
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}  # позволяет запустить вручную из вкладки Actions
+
+jobs:
+  send-holiday:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Отправить сегодняшние праздники
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python holiday_bot.py
